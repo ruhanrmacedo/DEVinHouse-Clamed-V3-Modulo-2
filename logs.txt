@@ -1,0 +1,1 @@
+[20-02-2025 08:16:46.750 PM] info: 	O servidor está rodando em http://localhost:3000
