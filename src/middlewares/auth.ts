@@ -2,18 +2,19 @@ import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import AppError from "../utils/AppError";
 
+declare module "express-serve-static-core" {
+  interface Request {
+    userId?: string;
+  }
+}
+
 type dataJwt = JwtPayload & { userId: string };
 
 export interface AuthRequest extends Request {
   userId: string;
 }
-
-export
-const verifyToken = (
-  req: Request & { userId: string },
-  _res: Response,
-  next: NextFunction
-) => {
+  
+export const verifyToken = (req: Request, _res: Response, next: NextFunction) => {
   try {
     const token = req.headers.authorization?.split(" ")[1] ?? "";
 
