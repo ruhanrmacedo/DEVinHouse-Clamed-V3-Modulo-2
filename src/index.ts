@@ -3,11 +3,8 @@ require("dotenv").config();
 import "reflect-metadata";
 import express from "express";
 import { AppDataSource } from "./data-source";
-
 import cors from "cors";
-
 import userRouter from "./routes/user.routes";
-
 import { handleError } from "./middlewares/handleError";
 
 import authRouter from "./routes/auth.routes";
@@ -19,8 +16,8 @@ app.use(cors()); // Permite que o express entenda requisições de outros domín
 
 app.use(express.json()); // Permite que o express entenda JSON
 
-app.use("/users", userRouter);
-app.use("/login", authRouter);
+app.use("/", userRouter);
+app.use("/", authRouter);
 
 app.get("/env", (req, res) => {
   res.json({
@@ -40,3 +37,6 @@ AppDataSource.initialize()
     });
   })
   .catch((error) => console.log(error));
+
+
+  export default app;
