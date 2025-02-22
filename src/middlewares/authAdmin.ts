@@ -15,12 +15,14 @@ export const authAdmin = async (req: Request, res: Response, next: NextFunction)
       const user = await userRepository.findOneBy({ id: req.userId });
 
       if (!user) {
-        throw new AppError("Usuário não encontrado", 401);
+        res.status(401).json({ message: "Usuário não encontrado" });
+        return;
       }
 
       if (user.profile !== UserProfileEnum.ADMIN) {
-        throw new AppError("Acesso negado. Apenas ADMIN pode cadastrar usuários", 403);
-      }
+        res.status(403).json({ message: "Acesso negado. Apenas ADMIN pode cadastrar usuários" });
+        return;
+    }
 
       next();
     });
