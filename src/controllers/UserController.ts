@@ -2,7 +2,12 @@ import { Request, Response } from "express";
 import { UserService } from "../services/UserService";
 
 export class UserController {
-    private userService = new UserService();
+    private userService: UserService;
+
+    constructor() {
+        this.userService = new UserService();
+        this.createUser = this.createUser.bind(this);
+    }
 
     async createUser(req: Request, res: Response) {
         try {
@@ -19,3 +24,5 @@ export class UserController {
         }
     }
 }
+
+export const userController = new UserController();
