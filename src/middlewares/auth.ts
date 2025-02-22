@@ -4,15 +4,13 @@ import AppError from "../utils/AppError";
 
 declare module "express-serve-static-core" {
   interface Request {
-    userId?: string;
+    userId?: number;
+    profile?: string;
   }
 }
 
-type dataJwt = JwtPayload & { userId: string };
+type dataJwt = JwtPayload & { userId: string; profile: string };
 
-export interface AuthRequest extends Request {
-  userId: string;
-}
   
 export const verifyToken = (req: Request, _res: Response, next: NextFunction) => {
   try {
@@ -24,7 +22,8 @@ export const verifyToken = (req: Request, _res: Response, next: NextFunction) =>
 
     const data = jwt.verify(token, process.env.JWT_SECRET ?? "") as dataJwt
 
-    req.userId = data.userId
+    req.userId = Number(data.userId);
+    req.profile = data.profile;
 
     next();
   } catch (error) {

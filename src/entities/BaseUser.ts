@@ -1,8 +1,8 @@
 import { PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from "typeorm";
 
 export abstract class BaseUser {
-  @PrimaryGeneratedColumn("uuid")
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column({ type: "varchar", length: 200, nullable: false })
   name: string;
