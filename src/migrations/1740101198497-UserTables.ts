@@ -1,9 +1,4 @@
-import {
-  MigrationInterface,
-  QueryRunner,
-  Table,
-  TableForeignKey,
-} from "typeorm";
+import { MigrationInterface, QueryRunner, Table, TableForeignKey } from "typeorm";
 
 export class UserTables1740101198497 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -13,10 +8,10 @@ export class UserTables1740101198497 implements MigrationInterface {
         columns: [
           {
             name: "id",
-            type: "uuid",
+            type: "int",
             isPrimary: true,
-            generationStrategy: "uuid",
-            default: "uuid_generate_v4()",
+            isGenerated: true,
+            generationStrategy: "increment",
           },
           { 
             name: "name", 
@@ -68,10 +63,10 @@ export class UserTables1740101198497 implements MigrationInterface {
         columns: [
           {
             name: "id",
-            type: "uuid",
+            type: "int",
             isPrimary: true,
-            generationStrategy: "uuid",
-            default: "uuid_generate_v4()",
+            isGenerated: true,
+            generationStrategy: "increment",
           },
           {
             name: "full_address",
@@ -87,7 +82,7 @@ export class UserTables1740101198497 implements MigrationInterface {
           },
           { 
             name: "user_id", 
-            type: "uuid", 
+            type: "int", 
             isNullable: false 
           },
           {
@@ -103,6 +98,7 @@ export class UserTables1740101198497 implements MigrationInterface {
         ],
         foreignKeys: [
           new TableForeignKey({
+            name: "FK_branches_users",
             columnNames: ["user_id"],
             referencedTableName: "users",
             referencedColumnNames: ["id"],
@@ -118,10 +114,10 @@ export class UserTables1740101198497 implements MigrationInterface {
         columns: [
           {
             name: "id",
-            type: "uuid",
+            type: "int",
             isPrimary: true,
-            generationStrategy: "uuid",
-            default: "uuid_generate_v4()",
+            isGenerated: true,
+            generationStrategy: "increment",
           },
           {
             name: "full_address",
@@ -137,7 +133,7 @@ export class UserTables1740101198497 implements MigrationInterface {
           },
           { 
             name: "user_id", 
-            type: "uuid", 
+            type: "int", 
             isNullable: false 
           },
           {
@@ -153,6 +149,7 @@ export class UserTables1740101198497 implements MigrationInterface {
         ],
         foreignKeys: [
           new TableForeignKey({
+            name: "FK_drivers_users",
             columnNames: ["user_id"],
             referencedTableName: "users",
             referencedColumnNames: ["id"],
