@@ -20,7 +20,7 @@ export const authAdmin = async (req: Request, res: Response, next: NextFunction)
       }
 
       if (user.profile !== UserProfileEnum.ADMIN) {
-        res.status(403).json({ message: "Acesso negado. Apenas ADMIN pode cadastrar usuários" });
+        res.status(403).json({ message: "Acesso negado. Apenas ADMIN pode acessar esse recurso" });
         return;
     }
 

@@ -2,12 +2,11 @@ import { UserService } from "../services/UserService";
 import { AppDataSource } from "../data-source";
 import { UserProfileEnum } from "../entities/enums/UserProfileEnum";
 import { User } from "../entities/User";
-import { validateCPF, validateCNPJ } from "../utils/validateDocument";
 import bcrypt from "bcrypt";
 import { Driver } from "../entities/Driver";
 import { Branch } from "../entities/Branch";
 import request from "supertest";
-import app from "../index";
+import app from "../app";
 
 describe("UserService - Testes Unitários", () => {
     let userService: UserService;
@@ -95,7 +94,7 @@ describe("UserService - Testes Unitários", () => {
             .send(newUser);
 
         expect(response.status).toBe(403);
-        expect(response.body.message).toBe("Acesso negado. Apenas ADMIN pode cadastrar usuários");
+        expect(response.body.message).toBe("Acesso negado. Apenas ADMIN pode acessar esse recurso");
     });
 
     // Salvamento de usuários nas tabelas corretas
