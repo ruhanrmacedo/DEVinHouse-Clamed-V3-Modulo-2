@@ -1,7 +1,7 @@
 import request from "supertest";
 import bcrypt from "bcrypt";
 import { AppDataSource } from "../data-source";
-import app from "../index";
+import app from "../app";
 import { User } from "../entities/User";
 import { UserProfileEnum } from "../entities/enums/UserProfileEnum";
 import { Driver } from "../entities/Driver";

@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { UserService } from "../services/UserService";
+import { UserProfileEnum } from "../entities/enums/UserProfileEnum";
 
 export class UserController {
     private userService: UserService;
@@ -7,6 +8,7 @@ export class UserController {
     constructor() {
         this.userService = new UserService();
         this.createUser = this.createUser.bind(this);
+        this.listUsers = this.listUsers.bind(this);
     }
 
     async createUser(req: Request, res: Response) {
@@ -21,6 +23,17 @@ export class UserController {
             }
             res.status(400).json({ message: error.message });
             return;
+        }
+    }
+
+    async listUsers(req: Request, res: Response) {
+        try {
+            const profile = req.query.profile ? (req.query.profile as UserProfileEnum) : undefined;
+            const users = await this.userService.listUsers(profile);
+            res.status(200).json(users);
+        } catch (error: any) {
+            console.error(error); 
+            res.status(500).json({ message: "Erro ao listar usuários" });
         }
     }
 }

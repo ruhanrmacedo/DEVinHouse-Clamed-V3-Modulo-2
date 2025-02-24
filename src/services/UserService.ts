@@ -62,4 +62,16 @@ export class UserService {
 
         return newUser;
     }
+
+    async listUsers(profile?: UserProfileEnum) {
+        const query = this.userRepository.createQueryBuilder("user")
+            .select(["user.id", "user.name", "user.profile", "user.status"]);
+    
+        if (profile) {
+            query.where("user.profile = :profile", { profile });
+        }
+    
+        return await query.getMany();
+    }
+    
 }
