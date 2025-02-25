@@ -64,14 +64,50 @@ export class UserService {
     }
 
     async listUsers(profile?: UserProfileEnum) {
-        const query = this.userRepository.createQueryBuilder("user")
+        const query = this.userRepository
+            .createQueryBuilder("user")
             .select(["user.id", "user.name", "user.profile", "user.status"]);
-    
+
         if (profile) {
             query.where("user.profile = :profile", { profile });
         }
-    
+
         return await query.getMany();
     }
-    
+
+    async getUserById(userId: number) {
+        const user = await this.userRepository
+            .createQueryBuilder("user")
+            .leftJoinAndSelect("user.driver", "driver")
+            .leftJoinAndSelect("user.branch", "branch")
+            .select([
+                "user.id",
+                "user.name",
+                "user.status",
+                "driver.full_address",
+                "branch.full_address",
+                "user.profile",
+            ])
+            .where("user.id = :userId", { userId })
+            .getOne();
+
+        if (!user) {
+            throw new Error("Usuário não encontrado");
+        }
+
+        const fullAddress =
+            user.profile === UserProfileEnum.DRIVER
+                ? user.driver?.full_address
+                : user.profile === UserProfileEnum.BRANCH
+                ? user.branch?.full_address
+                : null;
+
+        return {
+            id: user.id,
+            name: user.name,
+            status: user.status,
+            profile: user.profile,
+            full_address: fullAddress,
+        };
+    }
 }
