@@ -150,4 +150,22 @@ export class UserService {
             full_address: user.profile === UserProfileEnum.DRIVER ? data.full_address || null : null
         };
     }
+
+    // Método para atualizar o status de um usuário
+    async updateUserStatus(userId: number, status: boolean, loggedUser: { id: number, profile: UserProfileEnum }) {
+        const user = await this.userRepository.findOne({ where: { id: userId } });
+    
+        if (!user) {
+            throw new Error("Usuário não encontrado");
+        }
+    
+        if (loggedUser.profile !== UserProfileEnum.ADMIN) {
+            throw new Error("Acesso negado.");
+        }
+    
+        user.status = status;
+        await this.userRepository.save(user);
+    
+        return { message: "Status atualizado com sucesso." };
+    }
 }
