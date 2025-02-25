@@ -110,4 +110,44 @@ export class UserService {
             full_address: fullAddress,
         };
     }
+
+    // Método para atualizar um usuário
+    async updateUser(userId: number, data: any, loggedUser: { id: number, profile: UserProfileEnum }) {
+        const user = await this.userRepository.findOne({ where: { id: userId } });
+    
+        if (!user) {
+            throw new Error("Usuário não encontrado");
+        }
+    
+        if (loggedUser.profile !== UserProfileEnum.ADMIN && loggedUser.id !== userId) {
+            throw new Error("Acesso negado.");
+        }
+    
+        const forbiddenFields = ["id", "created_at", "updated_at", "status", "profile"];
+        if (Object.keys(data).some(field => forbiddenFields.includes(field))) {
+            throw new Error("Atualização de campo proibido.");
+        }
+    
+        if (data.name) user.name = data.name;
+        if (data.email) user.email = data.email;
+        if (data.password) user.password_hash = await bcrypt.hash(data.password, 10);
+    
+        await this.userRepository.save(user);
+    
+        if (user.profile === UserProfileEnum.DRIVER && data.full_address) {
+            const driver = await this.driverRepository.findOne({ where: { user: { id: userId } } });
+            if (driver) {
+                driver.full_address = data.full_address;
+                await this.driverRepository.save(driver);
+            }
+        }
+    
+        return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            profile: user.profile,
+            full_address: user.profile === UserProfileEnum.DRIVER ? data.full_address || null : null
+        };
+    }
 }

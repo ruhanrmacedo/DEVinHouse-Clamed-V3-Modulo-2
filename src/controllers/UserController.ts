@@ -10,6 +10,7 @@ export class UserController {
         this.createUser = this.createUser.bind(this);
         this.listUsers = this.listUsers.bind(this);
         this.getUserById = this.getUserById.bind(this);
+        this.updateUser = this.updateUser.bind(this);
     }
 
     async createUser(req: Request, res: Response) {
@@ -52,6 +53,43 @@ export class UserController {
             res.status(404).json({ message: "Usuário não encontrado" });
         }
     }
+
+    async updateUser(req: Request, res: Response) {
+        try {
+            const userId = parseInt(req.params.id);
+            if (isNaN(userId)) {
+                res.status(400).json({ message: "ID inválido." });
+                return;
+            }
+
+            if (!req.userId) {
+                res.status(401).json({ message: "Usuário não autenticado." });
+                return;
+            }
+    
+            const updatedUser = await this.userService.updateUser(userId, req.body, {
+                id: req.userId,
+                profile: req.profile as UserProfileEnum,
+            });
+    
+            res.status(200).json(updatedUser);
+        } catch (error: any) {
+            if (error.message === "Usuário não encontrado") {
+                res.status(404).json({ message: error.message });
+                return;
+            }
+            if (error.message === "Acesso negado.") {
+                res.status(401).json({ message: error.message });
+                return; 
+            }
+            if (error.message === "Atualização de campo proibido.") {
+                res.status(401).json({ message: error.message });
+                return; 
+            }
+            res.status(500).json({ message: "Erro ao atualizar usuário." });
+        }
+    }
+    
 }
 
 export const userController = new UserController();
