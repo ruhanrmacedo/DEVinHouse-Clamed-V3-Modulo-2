@@ -9,5 +9,6 @@ userRouter.post("/users", authAdmin, userController.createUser);
 userRouter.get("/users", authAdmin, userController.listUsers);
 userRouter.get("/users/:id", authAdminOrSelf, userController.getUserById);
 userRouter.put("/users/:id", authAdminOrSelf, userController.updateUser);
+userRouter.patch("/users/:id/status", authAdmin, userController.updateUserStatus);
 
 export default userRouter;
