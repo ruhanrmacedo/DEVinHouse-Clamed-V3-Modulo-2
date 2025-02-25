@@ -9,6 +9,7 @@ export class UserController {
         this.userService = new UserService();
         this.createUser = this.createUser.bind(this);
         this.listUsers = this.listUsers.bind(this);
+        this.getUserById = this.getUserById.bind(this);
     }
 
     async createUser(req: Request, res: Response) {
@@ -34,6 +35,21 @@ export class UserController {
         } catch (error: any) {
             console.error(error); 
             res.status(500).json({ message: "Erro ao listar usuários" });
+        }
+    }
+
+    async getUserById(req: Request, res: Response) {
+        try {
+            const id = parseInt(req.params.id);
+            if (isNaN(id)) {
+                res.status(400).json({ message: "ID inválido" });
+                return;
+            }
+            const user = await this.userService.getUserById(id);
+            res.status(200).json(user);
+        } catch (error: any) {
+            console.error(error);
+            res.status(404).json({ message: "Usuário não encontrado" });
         }
     }
 }
