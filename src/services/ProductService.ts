@@ -47,4 +47,22 @@ export class ProductService {
 
         return newProduct;
     }
+
+    async listProducts(userId: number) {
+        const user = await this.userRepository.findOne({ where: { id: userId }, relations: ["branch"] });
+
+        if (!user) {
+            throw new Error("Usuário não encontrado.");
+        }
+
+        if (user.profile !== UserProfileEnum.BRANCH) {
+            throw new Error("Acesso negado. Apenas FILIAIS podem visualizar produtos.");
+        }
+
+        const products = await this.productRepository.find({
+            relations: ["branch"],
+        });
+
+        return products;
+    }
 }

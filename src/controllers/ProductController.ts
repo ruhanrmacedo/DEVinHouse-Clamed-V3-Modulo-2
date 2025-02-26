@@ -7,6 +7,7 @@ export class ProductController {
     constructor() {
         this.productService = new ProductService();
         this.createProduct = this.createProduct.bind(this);
+        this.listProducts = this.listProducts.bind(this);
     }
 
     async createProduct(req: Request, res: Response) {
@@ -21,6 +22,24 @@ export class ProductController {
             res.status(201).json(product);
         } catch (error: any) {
             res.status(error.message === "Acesso negado. Apenas FILIAIS podem cadastrar produtos."
+                ? 401
+                : 400
+            ).json({ message: error.message });
+        }
+    }
+
+    async listProducts(req: Request, res: Response) {
+        try {
+            if (!req.userId) {
+                res.status(401).json({ message: "Usuário não autenticado." });
+                return;
+            }
+
+            const userId = req.userId;
+            const products = await this.productService.listProducts(userId);
+            res.status(200).json(products);
+        } catch (error: any) {
+            res.status(error.message === "Acesso negado. Apenas FILIAIS podem visualizar produtos."
                 ? 401
                 : 400
             ).json({ message: error.message });
