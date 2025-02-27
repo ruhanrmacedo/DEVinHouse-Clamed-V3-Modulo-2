@@ -81,3 +81,5 @@
 [26-02-2025 08:33:16.287 PM] info: 	Servidor rodando em http://localhost:3000
 [26-02-2025 08:51:19.306 PM] info: 	Servidor rodando em http://localhost:3000
 [26-02-2025 08:56:19.973 PM] info: 	Servidor rodando em http://localhost:3000
+[26-02-2025 10:05:18.549 PM] info: 	Servidor rodando em http://localhost:3000
+[26-02-2025 10:10:53.223 PM] info: 	Servidor rodando em http://localhost:3000
