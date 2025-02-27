@@ -9,6 +9,7 @@ export class MovementController {
         this.createMovement = this.createMovement.bind(this);
         this.listMovements = this.listMovements.bind(this);
         this.startMovement = this.startMovement.bind(this);
+        this.finishMovement = this.finishMovement.bind(this);
     }
 
     async createMovement(req: Request, res: Response) {
@@ -69,6 +70,28 @@ export class MovementController {
                        500).json({ message: error.message });
         }
     }
+
+    async finishMovement(req: Request, res: Response) {
+        try {
+            if (!req.userId) {
+                res.status(401).json({ message: "Usuário não autenticado." });
+                return;
+            }
+    
+            const movementId = Number(req.params.id);
+            const movement = await this.movementService.finishMovement(req.userId, movementId);
+    
+            res.status(200).json({ message: "Movimentação finalizada com sucesso.", movement });
+        } catch (error: any) {
+            res.status(
+                error.message.includes("Acesso negado") ? 401 :
+                error.message.includes("Movimentação não encontrada") ? 404 :
+                error.message.includes("MOTORISTA responsável") ? 403 :
+                500
+            ).json({ message: error.message });
+        }
+    }
+    
 
 }
 
