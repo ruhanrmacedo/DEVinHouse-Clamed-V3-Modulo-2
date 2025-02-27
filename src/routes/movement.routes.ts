@@ -9,5 +9,6 @@ const movementRouter = Router();
 movementRouter.post("/movements", verifyToken, movementController.createMovement);
 movementRouter.get("/movements", authBranchOrDriver, movementController.listMovements);
 movementRouter.patch("/movements/:id/start", authDriver, movementController.startMovement);
+movementRouter.patch("/movements/:id/end", authDriver, movementController.finishMovement);
 
 export default movementRouter;

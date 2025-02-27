@@ -109,4 +109,43 @@ export class MovementService {
     
         return movement;
     }
+
+    async finishMovement(userId: number, movementId: number) {
+        const user = await this.userRepository.findOne({ where: { id: userId }, relations: ["driver"] });
+    
+        if (!user || user.profile !== UserProfileEnum.DRIVER) {
+            throw new Error("Acesso negado. Apenas o MOTORISTA responsável pode finalizar a movimentação.");
+        }
+    
+        const movement = await this.movementRepository.findOne({
+            where: { id: movementId },
+            relations: ["driver", "destinationBranch", "product"],
+        });
+    
+        if (!movement) {
+            throw new Error("Movimentação não encontrada.");
+        }
+    
+        if (!movement.driver || movement.driver.id !== user.driver?.id) {
+            throw new Error("Apenas o MOTORISTA responsável pela movimentação pode finalizá-la.");
+        }
+    
+        // Atualizar status para FINISHED
+        movement.status = MovementStatusEnum.FINISHED;
+        await this.movementRepository.save(movement);
+    
+        // Criar o novo produto na filial de destino
+        const newProduct = this.productRepository.create({
+            name: movement.product.name,
+            description: movement.product.description,
+            amount: movement.quantity,
+            branch: movement.destinationBranch,
+            url_cover: movement.product.url_cover,
+        });
+    
+        await this.productRepository.save(newProduct);
+    
+        return movement;
+    }
+    
 }
