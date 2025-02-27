@@ -88,4 +88,25 @@ export class MovementService {
             order: { created_at: "DESC" }
         });
     }
+
+    async startMovement(userId: number, movementId: number) {
+        const user = await this.userRepository.findOne({ where: { id: userId }, relations: ["driver"] });
+    
+        if (!user || user.profile !== UserProfileEnum.DRIVER) {
+            throw new Error("Acesso negado. Apenas MOTORISTAS podem iniciar a movimentação.");
+        }
+    
+        const movement = await this.movementRepository.findOne({ where: { id: movementId }, relations: ["driver"] });
+    
+        if (!movement) {
+            throw new Error("Movimentação não encontrada.");
+        }
+    
+        movement.status = MovementStatusEnum.IN_PROGRESS;
+        movement.driver = user.driver;
+    
+        await this.movementRepository.save(movement);
+    
+        return movement;
+    }
 }
