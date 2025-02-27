@@ -45,26 +45,21 @@ export class MovementService {
             throw new Error("Filial de destino não encontrada.");
         }
     
-        // ✅ Garante que o usuário só pode movimentar produtos de sua própria filial
         if (product.branch.id !== user.branch.id) {
             throw new Error("Você só pode movimentar produtos da sua própria filial.");
         }
-    
-        // ✅ Garante que a origem e o destino sejam diferentes
+
         if (product.branch.id === destinationBranch.id) {
             throw new Error("A filial de origem não pode ser a mesma que a filial de destino.");
         }
-    
-        // ✅ Garante que há estoque suficiente
+
         if (quantity <= 0 || quantity > product.amount) {
             throw new Error("Estoque insuficiente para essa movimentação.");
         }
-    
-        // ✅ Atualiza o estoque na filial de origem
+
         product.amount -= quantity;
         await this.productRepository.save(product);
     
-        // ✅ Cria a movimentação sem precisar armazenar `origin_branch_id`
         const newMovement = this.movementRepository.create({
             destinationBranch,
             product,
@@ -75,5 +70,22 @@ export class MovementService {
         await this.movementRepository.save(newMovement);
     
         return newMovement;
+    }
+
+    async listMovements(userId: number) {
+        const user = await this.userRepository.findOne({ where: { id: userId } });
+
+        if (!user) {
+            throw new Error("Usuário não encontrado.");
+        }
+
+        if (user.profile !== UserProfileEnum.BRANCH && user.profile !== UserProfileEnum.DRIVER) {
+            throw new Error("Acesso negado. Apenas FILIAIS e MOTORISTAS podem visualizar movimentações.");
+        }
+
+        return this.movementRepository.find({
+            relations: ["destinationBranch", "product"],
+            order: { created_at: "DESC" }
+        });
     }
 }
