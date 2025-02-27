@@ -1,8 +1,10 @@
 import {
     Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn,
-    JoinColumn
+    JoinColumn,
+    OneToMany
 } from "typeorm";
 import { Branch } from "./Branch";
+import { Movement } from "./Movement";
 
 @Entity("products")
 export class Product {
@@ -24,6 +26,9 @@ export class Product {
     @ManyToOne(() => Branch, (branch) => branch.products, { nullable: false, onDelete: "CASCADE" })
     @JoinColumn({ name: "branch_id" }) 
     branch: Branch;
+
+    @OneToMany(() => Movement, (movement) => movement.product)
+    movements: Movement[];
 
     @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
     created_at: Date;
