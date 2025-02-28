@@ -104,3 +104,9 @@ Os testes estão localizados na pasta ```src/__tests__``` e incluem:
 - Testes de movimentação (```startMovement.test.ts```, ```finishMovement.test.ts```)
 - Testes de usuários (```listUsers.test.ts```, ```getUserById.test.ts```, ```updateUser.test.ts```, ```userStatus.test.ts```)
 - Testes de produtos (```listProduct.test.ts```, ```product.test.ts```)
+
+  ## Melhorias Futuras
+
+- Confirmação de Cadastro: Enviar um e-mail de verificação ao cadastrar um usuário, garantindo que apenas e-mails válidos sejam utilizados.
+- Recuperação de Senha: Implementar envio de e-mail com um link seguro para redefinição de senha.
+- Notificação de Movimentações: Enviar e-mails informando o status das movimentações de produtos entre filiais.
