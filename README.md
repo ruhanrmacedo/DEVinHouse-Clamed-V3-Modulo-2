@@ -110,3 +110,6 @@ Os testes estão localizados na pasta ```src/__tests__``` e incluem:
 - Confirmação de Cadastro: Enviar um e-mail de verificação ao cadastrar um usuário, garantindo que apenas e-mails válidos sejam utilizados.
 - Recuperação de Senha: Implementar envio de e-mail com um link seguro para redefinição de senha.
 - Notificação de Movimentações: Enviar e-mails informando o status das movimentações de produtos entre filiais.
+
+## Apresentação em vídeo
+https://drive.google.com/file/d/16_2ToNSMJ71zHJ2zt6g8_RjKQEFBqeA3/view?usp=sharing
